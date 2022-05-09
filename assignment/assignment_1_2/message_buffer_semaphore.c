@@ -46,6 +46,7 @@ void s_wait() {
     buf.sem_num = 0;
     buf.sem_op = -1;
     buf.sem_flg = SEM_UNDO;
+    semid = semget(SEM_KEY, 0, 0);
 
     if (semop(semid, &buf, 1) == -1) {
         printf("<s_wait> semop error!\n");
@@ -58,6 +59,7 @@ void s_quit() {
     buf.sem_num = 0;
     buf.sem_op = 1;
     buf.sem_flg = SEM_UNDO;
+    semid = semget(SEM_KEY, 0, 0);
 
     if (semop(semid, &buf, 1) == -1) {
         printf("<s_quit> semop error!\n");
@@ -157,14 +159,11 @@ int produce(MessageBuffer **buffer, int sender_id, int data, int account_id) {
 
 int consume(MessageBuffer **buffer, Message **message) {
 
-    s_wait();
     if((*buffer)->is_empty) {
-	    s_quit();
 	    return -1;
     }
     *message = &(*buffer)->messages[(*buffer)->account_id];
     (*buffer)->is_empty = 1;
-    s_quit();
     return 0;
 }
 

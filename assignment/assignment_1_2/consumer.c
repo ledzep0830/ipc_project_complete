@@ -6,6 +6,7 @@ int main(void) {
     Message *msg;
 
     init_buffer(&buffer);
+    init_sem();
 
     while (1) {
         if (consume(&buffer, &msg) == 0) {
