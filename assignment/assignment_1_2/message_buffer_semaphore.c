@@ -158,12 +158,15 @@ int produce(MessageBuffer **buffer, int sender_id, int data, int account_id) {
 }
 
 int consume(MessageBuffer **buffer, Message **message) {
-
+    
+    s_wait();	
     if((*buffer)->is_empty) {
+	    s_quit();
 	    return -1;
     }
     *message = &(*buffer)->messages[(*buffer)->account_id];
     (*buffer)->is_empty = 1;
+    s_quit();
     return 0;
 }
 
